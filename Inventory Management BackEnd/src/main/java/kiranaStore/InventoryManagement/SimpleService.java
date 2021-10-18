@@ -100,13 +100,16 @@ public class SimpleService {
 			test.displayProducts();
 			break;
 		case 10:
+			System.out.println("Enter Order id");
+			int oid=Integer.parseInt(br.readLine());
 			System.out.println("Enter ProductId");
 			int pid=Integer.parseInt(br.readLine());
 			System.out.println("Enter Customerid");
 			int cid=Integer.parseInt(br.readLine());
 			System.out.println("Enter Product Quantity");
 			int pqty=Integer.parseInt(br.readLine());
-			test.addOrder(pid,cid,pqty);
+			test.addOrder(oid,pid,cid,pqty);
+			//test.addOrder();
 			System.out.println("Order added successfully");
 			break;
 		case 11:
@@ -117,7 +120,7 @@ public class SimpleService {
 		case 12:
 			System.out.println("Orders are as follows:\n");
 			test.displayOrders();
-			test.displayTotal();
+			//test.displayTotal();
 			break;
 			
 		default:

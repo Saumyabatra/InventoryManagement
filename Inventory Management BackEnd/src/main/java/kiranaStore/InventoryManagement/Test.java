@@ -90,7 +90,8 @@ public class Test{
 			System.out.println(c);
 		}
 	}
-	public void addOrder(Integer pid,Integer cid,Integer orderQuantity) {
+	public void addOrder(Integer oid,Integer pid,Integer cid,Integer orderQuantity) {
+		order.setOrderId(oid);
 		order.setCustomerId(cid);
 		order.setEmployeeId(1);
 		order.setProductId(pid);
@@ -100,6 +101,18 @@ public class Test{
 		Integer totalPrice=(order.getOrderQuantity()*productDao.SearchById(pid).getProductPrice());
 		order.setTotalPrice(totalPrice);
 		System.out.println(orderDao.add(order));
+	}
+	public void addOrder() {
+		Integer productId = 3;
+        order.setCustomerId(1);
+        order.setEmployeeId(1);
+        order.setOrderDate(null);
+        order.setOrderId(2);
+        order.setProductId(3);
+        order.setOrderQuantity(3);
+        Integer totalPrice = (order.getOrderQuantity() * productDao.SearchById(productId).getProductPrice());
+        order.setTotalPrice(totalPrice);
+        System.out.println(orderDao.add(order));
 	}
 	public void displayOrder(Integer oid) {
 		order=orderDao.SearchById(oid);

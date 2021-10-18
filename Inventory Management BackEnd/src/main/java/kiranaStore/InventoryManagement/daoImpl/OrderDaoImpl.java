@@ -21,7 +21,8 @@ public class OrderDaoImpl implements OrderDao{
 @Override
 public Boolean add(Order order) {
 	try {
-		stmt=dbconfig.getCon().prepareStatement("insert into Order1(orderId,customerId,employeeId,orderId,orderQuantity,orderDate,totalPrice) values(?,?,?,?,?,?,?);");
+		ResultSet rs=null;
+		stmt=dbconfig.getCon().prepareStatement("insert into Order1(orderId,employeeId,customerId,productId,orderQuantity,orderDate,totalPrice) values(?,?,?,?,?,?,?);");
 		Integer orderId=order.getOrderId(); 
 		Integer employeeId=order.getEmployeeId();
 		Integer customerId=order.getCustomerId();
@@ -29,12 +30,13 @@ public Boolean add(Order order) {
 		Integer orderQuantity=order.getOrderQuantity();
 		Timestamp orderDate=new Timestamp(new Date().getTime());
 		Integer totalPrice=order.getTotalPrice();
+		
 		Product product=productDao.SearchById(productId);
 		if(product.getProductAvailability()<orderQuantity) {
 		throw new ArithmeticException("We do not have enough of "+product.getProductName()+" We only have "+product.getProductAvailability());
 		}
 		if(totalPrice<=0 || totalPrice==null) {
-		throw new NullPointerException("You must buy at least one order");
+		throw new NullPointerException("You must buy at least one Product");
 		}
 		stmt.setInt(1,orderId);
 		stmt.setInt(2, employeeId);
@@ -45,15 +47,16 @@ public Boolean add(Order order) {
 		stmt.setInt(7, totalPrice);
 		int i=stmt.executeUpdate();
 		
+
 		stmt=null;
-		stmt=dbconfig.getCon().prepareStatement("update product set orderAvailability=? where productId=?");
+		stmt=dbconfig.getCon().prepareStatement("update product set productAvailability=? where productId=?");
 		Integer remainingQty=product.getProductAvailability()-orderQuantity;
 		stmt.setInt(1, remainingQty);
 		stmt.setInt(2,product.getProductId());
 		i=stmt.executeUpdate();
 		return true;
 		}catch(SQLException | ArithmeticException| NullPointerException es) {
-			es.printStackTrace();
+			System.out.println(es);
 			return false;
 		}
 }
@@ -101,8 +104,8 @@ public Order SearchById(Integer c) {
 			o=new Order();
 			o.setOrderId(rs.getInt("orderId"));
 			o.setEmployeeId(rs.getInt("employeeId"));
-			o.setProductId(rs.getInt("productId"));
 			o.setCustomerId(rs.getInt("customerId"));
+			o.setProductId(rs.getInt("productId"));
 			o.setOrderQuantity(rs.getInt("orderQuantity"));
 			o.setOrderDate(rs.getTime("orderDate"));
 			o.setTotalPrice(rs.getInt("totalPrice"));
